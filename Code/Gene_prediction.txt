@@ -1,0 +1,38 @@
+# quailty control of illumina reads with fastp (v 0.23.4)
+## (Use AM4 as an example)
+fastp -c -i AM4_1.fq.gz -I AM4_2.fq.gz -o AM4_1.clean.fq.gz -O AM4_2.clean.fq.gz
+
+# genome guided transcriptome assembly by HISAT2 (v 2.2.1) and Trinity (v 2.15.1)
+hisat2-build Cni.v2.hic.chr.fasta.softmasked Cni.v2.softmasked.fasta -p 20
+hisat2 --new-summary --dta -p 30 -x Cni.v2.softmasked.fasta -1 AM1_1.clean.fq.gz,AM2_1.clean.fq.gz,AM3_1.clean.fq.gz,He1_1.clean.fq.gz,He2_1.clean.fq.gz,He3_1.clean.fq.gz,DG1_1.clean.fq.gz,DG2_1.clean.fq.gz,DG3_1.clean.fq.gz,Gi1_1.clean.fq.gz,Gi2_1.clean.fq.gz,G3_1.clean.fq.gz,ME1_1.clean.fq.gz,ME2_1.clean.fq.gz,ME3_1.clean.fq.gz,MP1_1.clean.fq.gz,MP2_1.clean.fq.gz,MP3_1.clean.fq.gz,SRR10482020_RNA-seq_of_C._nippona_adult_visceral_mass_1.fastq.gz,SRR10482022_RNA-seq_of_C._nippona_adult_mantle_1.fastq.gz -2 AM1_2.clean.fq.gz,AM2_2.clean.fq.gz,AM3_2.clean.fq.gz,He1_2.clean.fq.gz,He2_2.clean.fq.gz,He3_2.clean.fq.gz,DG1_2.clean.fq.gz,DG2_2.clean.fq.gz,DG3_2.clean.fq.gz,Gi1_2.clean.fq.gz,Gi2_2.clean.fq.gz,G3_2.clean.fq.gz,ME1_2.clean.fq.gz,ME2_2.clean.fq.gz,ME3_2.clean.fq.gz,MP1_2.clean.fq.gz,MP2_2.clean.fq.gz,MP3_2.clean.fq.gz,SRR10482020_RNA-seq_of_C._nippona_adult_visceral_mass_1.fastq.gz,SRR10482022_RNA-seq_of_C._nippona_adult_mantle_1.fastq.gz  | samtools sort -@ 20 -m 10G - -o hisat2.GG.bam
+Trinity --no_version_check --genome_guided_bam hisat2_GG.bam --max_memory 50G --genome_guided_max_intron 20000 --CPU 10 --output Trinity_GG
+
+# train Augustus gene predictor with braker (v 2.1.5)
+braker.pl --species=Crassostrea_nippona.p --genome=Cni.v2.hic.chr.fasta.softmasked --softmasking --bam=hisat2_GG.bam --cores=30
+
+# maker (v 3.01.03) annotation
+maker -CTL
+mpiexec -n 20 maker -fix_nucleotides
+
+# Iso-Seq data analysis with SMRT Link v12.0
+mv Cni.v2.hic.chr.fasta Cni.v2.assembly.chr.fasta
+ccs --min-rq 0.9 --min-passes 2 -j 20 Cni_tissue/m64164_210127_210057.subreads.bam Cni_tissue/m64164_210127_210057.ccs.bam
+ccs --min-rq 0.9 --min-passes 2 -j 20 Cni_stage/m64285e_231014_095024.subreads.bam Cni_stage/m64285e_231014_095024.ccs.bam
+lima Cni_tissue/m64164_210127_210057.ccs.bam NEB.fasta Cni_tissue/fl.bam --isoseq --peek-guess -j 20
+lima Cni_stage/m64285e_231014_095024.ccs.bam NEB.fasta Cni_stage/fl.bam --isoseq --peek-guess -j 20
+isoseq3 refine fl.NEB_5p--NEB_3p.bam NEB.fasta flnc.bam --require-polya -j 20
+pbmm2 align -j 20 --preset ISOSEQ --sort --unmapped --log-level INFO --log-file pbmm2.log flnc.bam Cni.v2.assembly.chr.fasta aligned.sorted.bam
+tama_collapse.py -d merge_dup -x no_cap -b BAM -f Cni.v2.assembly.chr.fasta -s aligned.sorted.bam -p tama 1>tama.log
+python2 tama_merge.py -f bed.fofn -p merge -d merge_dup
+python2 tama_read_support_levels.py -f trans_read.fofn -m merge_merge.txt -o merge
+python2 tama_remove_single_read_models_levels.py -b merge.bed -r merge_read_support.txt -o tama -l gene -k remove_multi -s 1 -n 2
+python2 tama_convert_bed_gtf_ensembl_no_cds.py tama.bed tama.gtf
+python sqanti3_qc.py tama.gtf Cni.all.maker.gene.gtf Cni.v2.assembly.chr.fasta --short_reads short_reads.fofn --saturation --cpus 20 
+python sqanti3_filter.py rules tama_classification.txt --gtf tama_corrected.gtf.cds.gff --isoforms tama_corrected.fasta --faa tama_corrected.faa -d . -o rules --skip_report -j filter_default.json
+
+# merge annotation results with AGAT (v.1.3.0) (https://github.com/NBISweden/AGAT)
+agat_sp_merge_annotations.pl -f Cni.all.maker.gene.gtf -f rules.filtered.gtf --out Cni.merged.gene.gff3
+mv Cni.merged.gene.gff3 Cni.v2.all.gene.gff3
+gffread Cni.v2.all.gene.gff3 -g Cni.v2.assembly.chr.fasta-x Cni.v2.cds.fasta -y Cni.v2.pep.fasta -w Cni.v2.transcript.fasta
+agat_sp_keep_longest_isoform.pl -gff Cni.v2.all.gene.gff3 -o Cni.v2.longest.gene.gff3
+gffread Cni.v2.longest.gene.gff3 -g Cni.v2.assembly.chr.fasta-x Cni.v2.longest.cds.fasta -y Cni.v2.longest.pep.fasta
