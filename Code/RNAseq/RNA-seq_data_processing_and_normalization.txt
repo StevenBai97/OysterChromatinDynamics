@@ -12,4 +12,5 @@ ls */quant.sf > quant/quant_files.fofn
 perl abundance_estimates_to_matrix.pl --est_method salmon --quant_files quant/quant_files.fofn --name_sample_by_basedir --gene_trans_map quant/gene_trans_map --out_prefix quant/salmon
 
 # Differential expression analysis
+## run_DE_analysis.pl from Trinity-v2.15.1
 run_DE_analysis.pl --matrix quant/salmon.gene.counts.matrix --method edgeR --samples_file sample.info --contrasts contrasts.txt
