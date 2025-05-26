@@ -1,0 +1,16 @@
+# NCBI non-redundant (NR) database (2023_11_08) (using diamond v2.1.8.162)
+diamond makedb --threads 10 --tmpdir ./ --in nr.gz --db nr > nr.makedb.log 2>&1
+diamond blastp --very-sensitive --outfmt 6 qseqid sseqid pident length mismatch qstart qend sstart send evalue bitscore stitle --evalue 1e-5 --threads 10 --max-target-seqs 1 --db ~/node3/database/nr.dmnd --query Cni.v2.pep.fasta -o nr_diamond.tsv 1>nr_diamond.log 2>&1
+
+# Uniprot/SwissProt database (release-2023_05) (using diamond v2.1.8.162)
+diamond makedb --threads 10 --tmpdir ./ --in uniprot_sprot.fasta.gz --db uniprot_sprot > uniprot_sprot.makedb.log 2>&1
+diamond blastp --very-sensitive --outfmt 6 qseqid sseqid pident length mismatch qstart qend sstart send evalue bitscore stitle --evalue 1e-5 --threads 10 --max-target-seqs 1 --db ~/node3/database/uniprot_sprot.dmnd --query Cni.v2.pep.fasta -o swissprot_diamond.tsv 1>swissprot_diamond.log 2>&1
+
+# eggNOG database (v 5.0.2) (using emapper-2.1.12)
+download_eggnog_data.py -P -M -y --data_dir ./
+emapper.py -m diamond --tax_scope 33208 --sensmode ultra-sensitive -i Cni.v2.pep.fasta --evalue 1e-5 --output emapper_out --data_dir /public1/db/eggnog-mapper-data/ --cpu 10 >emapper.log 2>&1
+emapper.py -m diamond --tax_scope 33208 --sensmode ultra-sensitive -i Cni.v2.longest.pep.fasta --evalue 1e-5 --output longest.emapper_out --data_dir /public1/db/eggnog-mapper-data/ --cpu 10 >longest.emapper.log 2>&1
+
+# InterPro database (using InterProScan v.5.64-96.0)
+interproscan.sh -cpu 10 -i Cni.v2.pep.fasta -dp -goterms -b interprosan_out > interprosan.log 2>&1
+interproscan.sh -cpu 10 -i Cni.v2.longest.pep.fasta -dp -goterms -b longest.interprosan_out > longest.interprosan.log 2>&1
