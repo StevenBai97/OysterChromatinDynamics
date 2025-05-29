@@ -1,3 +1,12 @@
+library(tidyverse)
+library(datawizard)
+library(Mfuzz)
+library(ggpubr)
+library(RColorBrewer)
+library(viridis)
+library(scales)
+library(ComplexHeatmap)
+
 # extract expressed genes (TPM > 1) and calculate their average expression
 or_gene_exp = read.delim("Data/Figure1/salmon.gene.TMM.EXPR.matrix", 
                          stringsAsFactors = F, check.names = F, row.names = 1)
@@ -82,13 +91,6 @@ write.table(df_reordered_clean,"Cni_clusters_expression_corrected.txt",
             quote = F, sep = '\t', row.names = FALSE)
 
 # LOESS smoothing
-library(gplots)
-library(tidyr)
-library(matrixStats)
-library(data.table)
-library(mgcv)
-library(scales)
-library(viridis)
 palette <- viridis_pal(option = "D", direction = 1)(30)
 palette2 <- gsub('.{2}$', '', palette)
 write.csv(rbind(palette2), file = 'palette.txt', row.names = FALSE)
