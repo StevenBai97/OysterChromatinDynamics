@@ -7,7 +7,7 @@ library(viridis)
 library(scales)
 library(ComplexHeatmap)
 
-# extract expressed genes (TPM > 1) and calculate their average expression
+# Extract expressed genes (TPM > 1) and calculate their average expression
 or_gene_exp = read.delim("Data/Figure1/salmon.gene.TMM.EXPR.matrix", 
                          stringsAsFactors = F, check.names = F, row.names = 1)
 rows_to_remove <- rowSums(or_gene_exp[, -1] < 1) == (ncol(or_gene_exp) - 1)
@@ -23,7 +23,7 @@ df_average <- data.frame(G,T,D,LD,J,M)
 row.names(df_average) <- row.names(gene_exp)
 write.table(df_average,"gene_exp_average.txt",sep = '\t',quote = F,col.names=NA)
 
-# mfuzz clustering
+# Mfuzz clustering
 m_df_average <- as.matrix(df_average)
 eset_rna <- new('ExpressionSet', exprs = m_df_average)
 clean_eset_rna <- filter.std(eset_rna,min.std=0) 
@@ -71,7 +71,7 @@ ComplexHeatmap::Heatmap(as.matrix(df_sorted[-c(7)]),
                         col = u_color)
 dev.off()
 
-# re-write clusters
+# Re-write clusters
 df_reordered <- df_raw
 df_reordered$Cluster_corrected <- c(rep(0,nrow(df_reordered)))
 df_reordered$Cluster_corrected[df_reordered$Cluster_raw == 7] <- 1
