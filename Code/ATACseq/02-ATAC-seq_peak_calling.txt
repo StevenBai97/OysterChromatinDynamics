@@ -1,0 +1,9 @@
+# convert the BAM file to BED format
+bedtools bamtobed -i clean_bams/D1_sorted.fbw.bam > bed/D1_final.bed
+
+# peak calling using MACS3 (v.3.0.0b3) 
+macs3 callpeak -g 533814033 -t bed/D1_final.bed -n D1 -f BED --nomodel --shift -75 --extsize 150 --qvalue 0.05 -B --SPMR --keep-dup all --outdir clean_peaks 1>logs/D1_callpeak_clean_with_macs3.log 2>&1
+
+# identify reproducible peaks across biological replicates using the irreproducible discovery rate method (IDR < 0.05) (v.2.0.4)
+idr --samples clean_peaks/D1_peaks.narrowPeak clean_peaks/D2_peaks.narrowPeak --input-file-type narrowPeak --output-file idr_peaks/D_peaks.narrowPeak --soft-idr-threshold 0.05 --plot
+awk -v OFS="\t" 'BEGIN {FS=OFS} { $4=$1":"$2"_"$3; print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10 }' D_peaks.narrowPeak | sort -k1,1 -k2,2n -k3,3n > D.IDR_peaks.narrowPeak
