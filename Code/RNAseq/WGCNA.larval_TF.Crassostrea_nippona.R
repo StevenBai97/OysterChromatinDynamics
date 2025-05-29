@@ -103,28 +103,3 @@ labeledHeatmap(Matrix = moduleTraitCor,
                zlim = c(-1,1),
                main = paste("Module-trait relationships"))
 dev.off()
-
-# Reconstruct Topological Overlap Matrix (TOM)
-TOM <- TOMsimilarityFromExpr(datExpr, power = power)
-# Select modules (in this case, the whole genome)
-data <- read.csv('moduleColors.csv', header = TRUE)
-moduleColors <- data[, 2]
-colors <- read.csv(file = "moduleColors.csv")
-colors <- unique(colors[2])
-modules <- t(colors)
-# Select module IDs
-Gene_IDs <- rownames(gene_exp)
-inModule <- is.finite(match(moduleColors, modules))
-modProbes <- Gene_IDs[inModule]
-# Select the corresponding Topological Overlap
-modTOM <- TOM[inModule, inModule]
-dimnames(modTOM) <- list(modProbes, modProbes)
-write.table(modules, paste("CytoscapeInput-edges-", paste(modules, collapse="-"), ".txt", sep=""))
-# Export the network into edge and node list files Cytoscape can read
-cyt <- exportNetworkToCytoscape(modTOM,
-                                edgeFile = paste("CytoscapeInput-edges-", paste(modules, collapse="-"), ".txt", sep=""),
-                                nodeFile = paste("CytoscapeInput-nodes-", paste(modules, collapse="-"), ".txt", sep=""),
-                                weighted = TRUE,
-                                threshold = 0.25,
-                                nodeNames = modProbes,
-                                nodeAttr = moduleColors[inModule])
