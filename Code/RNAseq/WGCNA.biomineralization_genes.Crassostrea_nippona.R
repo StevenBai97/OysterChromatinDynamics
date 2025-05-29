@@ -1,6 +1,9 @@
-library(tidyverse)
 library(WGCNA)
-library(RColorBrewer)
+library(tidyverse)
+library(cowplot)
+library(ggrepel)
+library(ggthemes)
+library(scales)
 
 # Import phenotypic traits
 datTraits <- read.delim("sample.info", row.names=1)
