@@ -1,0 +1,15 @@
+# quailty control of raw reads with fastp (v 0.23.4)
+## (Use D1 as an example)
+fastp -l 30 -g -i rawdata/D1_1.fq.gz -I rawdata/D1_2.fq.gz -o cleandata/D1_1.fq.gz -O cleandata/D1_2.fq.gz --html cleandata/D1_fastp.html --json cleandata/D1_fastp.json 1>logs/D1_fastp_quality_control.log 2>&1
+
+# map to the Crassostrea nippona genome with bowtie2 (v.2.5.2)
+bowtie2-build --threads 20 Cni.v2.assembly.chr.fasta Cni_v2 1>logs/bowtie2_build.log 2>&1
+bowtie2 -x Cni_v2 -X 2000 --no-mixed --no-discordant -p 20 -1 cleandata/D1_1.fq.gz -2 cleandata/D1_2.fq.gz -S raw_bams/D1.sam 1>logs/D1_bowtie2_align.log 2>&1
+samtools sort -@ 20 -o raw_bams/D1_sorted.bam raw_bams/D1.sam 1>logs/D1_sort_bam.log 2>&1
+samtools index raw_bams/D1_sorted.bam
+
+# remove PCR duplicates, unmapped, multi-mapped, low-quality reads (MAPQ < 20), and reads mapped to the mitochondrial genome
+alignmentSieve --numberOfProcessors 20 --ATACshift --bam raw_bams/D1_sorted.bam --outFile clean_bams/D1_sorted.bam --filterMetrics logs/D1_sieve_alignment.log --ignoreDuplicates --minMappingQuality 20 --samFlagExclude 260 --blackListFileName blacklist.bed 1>logs/D1_sieve_alignment.log 2>&1
+faCount -summary Cni.v2.assembly.chr.fasta
+samtools sort -@ 10 -o clean_bams/D1_sorted.fbw.bam clean_bams/D1_sorted.bam
+samtools index clean_bams/D1_sorted.fbw.bam
