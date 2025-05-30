@@ -1,14 +1,13 @@
 ## Use D1(h3k27ac) as an example ##
 
-# quantification using featureCounts
+# quantification using featureCounts (R script is the same as that used for ATAC-seq)
 Rscript run-featurecounts.R -b clean_bams/D1_h3k27ac_sorted.fbw.bam --saf Diffbind_H3K27ac_peakset.saf -o counts/D1_h3k27ac 1>../logs/D1_h3k27ac_run_feature_counts.log 2>&1
 
 
-# TMM normalization
+# TMM normalization (perl script is the same as that used for ATAC-seq)
 perl abundance_estimates_to_matrix.pl --est_method featureCounts --quant_files counts/h3k27ac.count.fofn --out_prefix counts/h3k27ac 1>../logs/h3k27ac_count_matrix.log 2>&1
 
-# Differential expression analysis
-## run_DE_analysis.pl from Trinity-v2.15.1
+# Differential expression analysis (perl script is the same as that used for ATAC-seq)
 perl run_DE_analysis.pl -m ../h3k27ac.counts.matrix --method edgeR -s sample.h3k27ac --contrasts contrasts.h3k27ac -o h3k27ac 1> run_h3k27ac_edgeR.log 2>&1
 
 # Peak annotation with UROPA
