@@ -1,3 +1,5 @@
+## Use D1 as an example ##
+
 # convert the BAM file to BED format
 bedtools bamtobed -i clean_bams/D1_sorted.fbw.bam > bed/D1_final.bed
 
