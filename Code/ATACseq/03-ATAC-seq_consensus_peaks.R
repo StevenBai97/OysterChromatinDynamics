@@ -1,8 +1,5 @@
-library(DESeq2)
 library(BiocParallel)
 library(DiffBind)
-library(ggplot2)
-library(readr)
 
 dbObj <- dba(sampleSheet = "samplesheet.csv")
 samples_count_nofilter <- dba.count(dbObj, summits=T,filter=0, bParallel=T)
