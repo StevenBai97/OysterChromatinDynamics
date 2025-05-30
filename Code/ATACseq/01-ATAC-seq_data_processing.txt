@@ -1,5 +1,6 @@
+## (Use D1 as an example) ##
+
 # quailty control of raw reads with fastp (v 0.23.4)
-## (Use D1 as an example)
 fastp -l 30 -g -i rawdata/D1_1.fq.gz -I rawdata/D1_2.fq.gz -o cleandata/D1_1.fq.gz -O cleandata/D1_2.fq.gz --html cleandata/D1_fastp.html --json cleandata/D1_fastp.json 1>logs/D1_fastp_quality_control.log 2>&1
 
 # map to the Crassostrea nippona genome with bowtie2 (v.2.5.2)
