@@ -1,0 +1,9 @@
+## Use D1 as an example ##
+
+# For narrow peaks: [H3K4me3, H3K27ac]
+macs3 callpeak -g 533814033 -t clean_bams/D1_h3k27ac_sorted.fbw.bam --name D1_h3k27ac --format BAMPE --qvalue 0.05 -B --SPMR --keep-dup all --outdir clean_peaks 1>logs/D1_h3k27ac_callpeak_clean_with_macs3.log 2>&1
+idr --samples clean_peaks/D1_h3k27ac_peaks.narrowPeak clean_peaks/D2_h3k27ac_peaks.narrowPeak --input-file-type narrowPeak --output-file idr_peaks/D1_D2.h3k27ac.IDR_filter.narrowPeak --soft-idr-threshold 0.05 --plot 1>logs/D1_D2.h3k27ac.idr.log 2>&1
+
+# For broad peaks: [H3K27me3]
+macs3 callpeak -g 533814033 -t clean_bams/D1_h3k27me3_sorted.fbw.bam --name D1_h3k27me3 --format BAMPE --broad --broad-cutoff 0.05 -B --SPMR --keep-dup all --outdir clean_peaks 1>logs/D1_h3k27me3_callpeak_clean_with_macs3.log 2>&1
+bedtools intersect -f 0.5 -r -a clean_peaks/D1_h3k27me3_peaks.broadPeak -b clean_peaks/D2_h3k27me3_peaks.broadPeak -wa > bedtools/D_h3k27me3_peaks.broadPeak
