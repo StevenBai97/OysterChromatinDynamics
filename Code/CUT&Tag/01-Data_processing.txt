@@ -1,0 +1,21 @@
+## Use D1(h3k27ac) as an example ##
+
+# quailty control of raw reads with fastp (v 0.23.4)
+fastp -g -i rawdata/D1_h3k27ac_R1.fastq.gz  -I rawdata/D1_h3k27ac_R2.fastq.gz  -o cleandata/D1_h3k27ac_R1.fastq.gz -O cleandata/D1_h3k27ac_R2.fastq.gz --html cleandata/D1_h3k27ac_fastp.html --json cleandata/D1_h3k27ac_fastp.json 1>logs/D1_h3k27ac_fastp_quality_control.log 2>&1
+
+# map to the Crassostrea nippona genome with bowtie2 (v.2.5.2)
+bowtie2 -x Cni_v2 --no-mixed --no-discordant -p 20 -1 cleandata/D1_h3k27ac_R1.fastq.gz -2 cleandata/D1_h3k27ac_R2.fastq.gz -S raw_bams/D1_h3k27ac.sam 1>logs/D1_h3k27ac_bowtie2_align.log 2>&1
+samtools sort -@ 20 -o raw_bams/D1_h3k27ac_sorted.bam raw_bams/D1_h3k27ac.sam 1>logs/D1_h3k27ac_sort_bam.log 2>&1
+samtools index raw_bams/D1_h3k27ac_sorted.bam
+
+# remove PCR duplicates, unmapped, multi-mapped, low-quality reads (MAPQ < 20), and reads mapped to the mitochondrial genome.
+alignmentSieve --numberOfProcessors 20 --bam raw_bams/D1_h3k27ac_sorted.bam --outFile clean_bams/D1_h3k27ac_sorted.bam --filterMetrics logs/D1_h3k27ac_sieve_alignment.log --ignoreDuplicates --minMappingQuality 20 --samFlagExclude 260 --blackListFileName blacklist.bed 1>logs/D1_h3k27ac_sieve_alignment.log 2>&1
+samtools sort -@ 10 -o clean_bams/D1_h3k27ac_sorted.fbw.bam clean_bams/D1_h3k27ac_sorted.bam
+samtools index clean_bams/D1_h3k27ac_sorted.fbw.bam
+
+# convert BAM to bigWig file with RPKM normalization
+bamCoverage -p 20 --bam clean_bams/D1_h3k27ac_sorted.fbw.bam --outFileName clean_bams/D1_h3k27ac.bw --effectiveGenomeSize 533814033 --binSize 10 --extendReads --normalizeUsing RPKM 1>logs/D1_h3k27ac_convert_bam_to_bigwig.log 2>&1
+
+# compute signal matrix centered on TSS (±2 kb) using the bigWig file and plot heatmap
+computeMatrix reference-point --referencePoint TSS -S clean_bams/D1_h3k27ac.bw --samplesLabel D1_h3k27ac -R Cni_v2.all.gene.bed6 Cni_v2.shuffle3000.gene.bed6 -a 2000 -b 2000 -p 20 --skipZeros --missingDataAsZero -o deeptools/D1_h3k27ac.tss_2k_matrix.gz 1>logs/D1_h3k27ac.plot_heatmap_reference_point.log 2>&1
+plotHeatmap -m deeptools/D1_h3k27ac.tss_2k_matrix.gz -out deeptools/D1_h3k27ac.tss_2k_heatmap.pdf --colorMap bwr --plotFileFormat pdf 1>>logs/D1_h3k27ac.plot_heatmap_reference_point.log 2>&1
