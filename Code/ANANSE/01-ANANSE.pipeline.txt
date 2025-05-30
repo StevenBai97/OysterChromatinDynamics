@@ -1,0 +1,7 @@
+## Use D as an example ##
+
+genomepy install -p local Cni.v2.assembly.chr.fasta --Local-path-to-annotation Cni.v2.longest.gene.gtf
+bedtools intersect -f 0.5 -r -a D.IDR_peaks.narrowPeak -b D_5_dense.Posi_Act > D.atac.for_ananse_peaks
+sort -k8,8nr D.atac.for_ananse_peaks |  awk -v OFS='\t' -v flank=100   '{print $1, $2+$10-flank, $2+$10+flank+1}' |  awk '$2>=0' > D.atac.for_ananse.bed
+ananse binding -A D.ATAC.bam -H D_h3k27ac_sorted.fbw.bam -g Cni.v2.assembly.chr.fasta -p JASPAR2024.pfm -o binding/D -r D.atac.for_ananse.bed -n 20
+ananse network -n 24 -e network/D.tpm -g Cni.v2.assembly.chr.fasta -a Cni.v2.longest.gene.bed -f -o network/D/D.ANANSE_network.tsv binding/D/binding.h5
