@@ -1,0 +1,16 @@
+{
+"queries":[
+    {"distance": [2000, 500], "feature": ["gene"], "feature_anchor": ["start"], "name": "promoter", "relative_location": ["OverlapStart", "Downstream", "PeakInsideFeature", "Upstream", "OverlapEnd", "FeatureInsidePeak"], "strand": "ignore"},
+    {"distance": [100000, 100000], "feature": ["gene"], "feature_anchor": ["end", "start"], "name": "genic", "relative_location": ["FeatureInsidePeak", "PeakInsideFeature", "OverlapEnd"], "strand": "ignore"},
+    {"distance": [5000, 5000], "feature": ["gene"], "feature_anchor": ["start"], "name": "proximal", "relative_location": ["Upstream"], "strand": "ignore"},
+    {"distance": [100000, 100000], "feature": ["gene"], "feature_anchor": ["end", "start"], "name": "distal", "relative_location": ["Downstream", "Upstream"], "strand": "ignore"}
+          ],
+"show_attributes": ["gene_id"],
+"priority": "False",
+"gtf": "Cni.v2.longest.gene.gtf",
+"bed": "H3K4me3.peaks.for_uropa.bed",
+"prefix": "H3K4me3",
+"outdir": "./",
+"threads": "20",
+"output_by_query": "False"
+}
