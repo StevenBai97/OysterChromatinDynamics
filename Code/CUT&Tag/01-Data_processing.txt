@@ -16,22 +16,15 @@ samtools index clean_bams/D1_h3k27ac_sorted.fbw.bam
 # convert BAM to bigWig file with RPKM normalization
 bamCoverage -p 20 --bam clean_bams/D1_h3k27ac_sorted.fbw.bam --outFileName clean_bams/D1_h3k27ac.bw --effectiveGenomeSize 533814033 --binSize 10 --extendReads --normalizeUsing RPKM 1>logs/D1_h3k27ac_convert_bam_to_bigwig.log 2>&1
 
-# compute signal matrix centered on TSS (±2 kb) using the bigWig file and plot heatmap
-computeMatrix reference-point --referencePoint TSS -S clean_bams/D1_h3k27ac.bw --samplesLabel D1_h3k27ac -R Cni_v2.all.gene.bed6 Cni_v2.shuffle3000.gene.bed6 -a 2000 -b 2000 -p 20 --skipZeros --missingDataAsZero -o deeptools/D1_h3k27ac.tss_2k_matrix.gz 1>logs/D1_h3k27ac.plot_heatmap_reference_point.log 2>&1
-plotHeatmap -m deeptools/D1_h3k27ac.tss_2k_matrix.gz -out deeptools/D1_h3k27ac.tss_2k_heatmap.pdf --colorMap bwr --plotFileFormat pdf 1>>logs/D1_h3k27ac.plot_heatmap_reference_point.log 2>&1
+# compute signal matrix centered on TSS (±2 kb) using the bigWig file and plot signal profile
+computeMatrix reference-point --referencePoint TSS -S clean_bams/D1_h3k27ac.bw --samplesLabel D1_h3k27ac -R Cni_v2.all.gene.bed6 Cni_v2.shuffle3000.gene.bed6 -a 2000 -b 2000 -p 20 --skipZeros --missingDataAsZero -o deeptools/D1_h3k27ac.tss_2k_matrix.gz
+plotProfile -m deeptools/D1_h3k27ac.tss_2k_matrix.gz -o deeptools/D1_h3k27ac.tss_2k_profile.pdf --plotFileFormat pdf --outFileNameData deeptools/D1_h3k27ac.tss_2k_profile.tab
 
-# Compute signal matrix across gene bodies (±5 kb) grouped by expression level
-computeMatrix scale-regions -S clean_bams/D_h3k4me3.bw -R D_exp_tpm.High.bed6 D_exp_tpm.Medium.bed6 D_exp_tpm.Low.bed6 D_exp_tpm.No.bed6 --regionBodyLength 5000 -a 5000 -b 5000 -o D.h3k4me3.tss_tes_matrix.gz -p 40
-computeMatrix scale-regions -S clean_bams/M_h3k4me3.bw -R M_exp_tpm.High.bed6 M_exp_tpm.Medium.bed6 M_exp_tpm.Low.bed6 M_exp_tpm.No.bed6 --regionBodyLength 5000 -a 5000 -b 5000 -o M.h3k4me3.tss_tes_matrix.gz -p 40
-computeMatrix scale-regions -S clean_bams/D_h3k27me3.bw -R D_exp_tpm.High.bed6 D_exp_tpm.Medium.bed6 D_exp_tpm.Low.bed6 D_exp_tpm.No.bed6 --regionBodyLength 5000 -a 5000 -b 5000 -o D.h3k27me3.tss_tes_matrix.gz -p 40
-computeMatrix scale-regions -S clean_bams/M_h3k27me3.bw -R M_exp_tpm.High.bed6 M_exp_tpm.Medium.bed6 M_exp_tpm.Low.bed6 M_exp_tpm.No.bed6 --regionBodyLength 5000 -a 5000 -b 5000 -o M.h3k27me3.tss_tes_matrix.gz -p 40
-computeMatrix scale-regions -S clean_bams/D_h3k27ac.bw -R D_exp_tpm.High.bed6 D_exp_tpm.Medium.bed6 D_exp_tpm.Low.bed6 D_exp_tpm.No.bed6 --regionBodyLength 5000 -a 5000 -b 5000 -o D.h3k27ac.tss_tes_matrix.gz -p 40
-computeMatrix scale-regions -S clean_bams/M_h3k27ac.bw -R M_exp_tpm.High.bed6 M_exp_tpm.Medium.bed6 M_exp_tpm.Low.bed6 M_exp_tpm.No.bed6 --regionBodyLength 5000 -a 5000 -b 5000 -o M.h3k27ac.tss_tes_matrix.gz -p 40
+# merge BAM files of two biological replicates using samtools (v.1.13)
+samtools merge -o clean_bams/D_h3k27ac_sorted.fbw.bam clean_bams/D1_h3k27ac_sorted.fbw.bam clean_bams/D2_h3k27ac_sorted.fbw.bam
+samtools index clean_bams/D_h3k27ac_sorted.fbw.bam
+bamCoverage -p 20 --bam clean_bams/D_h3k27ac_sorted.fbw.bam --outFileName clean_bams/D_h3k27ac.bw --effectiveGenomeSize 533814033 --binSize 10 --extendReads --normalizeUsing RPKM
 
-# Plot signal profile
-plotProfile -m D.h3k4me3.tss_tes_matrix.gz -o D.h3k4me3.tss_tes_profile.pdf --plotFileFormat pdf --outFileNameData D.h3k4me3.tss_tes_matrix.tab
-plotProfile -m M.h3k4me3.tss_tes_matrix.gz -o M.h3k4me3.tss_tes_profile.pdf --plotFileFormat pdf --outFileNameData M.h3k4me3.tss_tes_matrix.tab
-plotProfile -m D.h3k27me3.tss_tes_matrix.gz -o D.h3k27me3.tss_tes_profile.pdf --plotFileFormat pdf --outFileNameData D.h3k27me3.tss_tes_matrix.tab
-plotProfile -m M.h3k27me3.tss_tes_matrix.gz -o M.h3k27me3.tss_tes_profile.pdf --plotFileFormat pdf --outFileNameData M.h3k27me3.tss_tes_matrix.tab
-plotProfile -m D.h3k27ac.tss_tes_matrix.gz -o D.h3k27ac.tss_tes_profile.pdf --plotFileFormat pdf --outFileNameData D.h3k27ac.tss_tes_matrix.tab
-plotProfile -m M.h3k27ac.tss_tes_matrix.gz -o M.h3k27ac.tss_tes_profile.pdf --plotFileFormat pdf --outFileNameData M.h3k27ac.tss_tes_matrix.tab
+# Compute signal matrix across gene bodies (±5 kb) grouped by expression level and plot signal profile
+computeMatrix scale-regions -S clean_bams/D_h3k27ac.bw -R D_exp_tpm.High.bed6 D_exp_tpm.Medium.bed6 D_exp_tpm.Low.bed6 D_exp_tpm.No.bed6 --regionBodyLength 5000 -a 5000 -b 5000 -o deeptools/D.h3k27ac.tss_tes_matrix.gz -p 40
+plotProfile -m deeptools/D.h3k27ac.tss_tes_matrix.gz -o deeptools/D.h3k27ac.tss_tes_profile.pdf --plotFileFormat pdf --outFileNameData deeptools/D.h3k27ac.tss_tes_matrix.tab
