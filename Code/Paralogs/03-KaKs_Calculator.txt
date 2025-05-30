@@ -1,0 +1,11 @@
+# Run ParaAT to align coding sequences (CDS) and corresponding protein sequences for each gene pair
+ParaAT.pl -h paralogs.geneid -n paralogs.cds.fasta -a paralogs.pep.fasta -p pro -o output_dir -f axt -m muscle
+
+# Loop over all .axt files produced by ParaAT and calculate Ka/Ks values using KaKs_Calculator 2.0
+for axt in output_dir/*.axt
+do
+  KaKs_Calculator \
+    -i $axt \
+    -o ${axt%.axt}.kaks \
+    -m YN
+done
