@@ -1,0 +1,10 @@
+## Use D1 as an example ##
+
+# merge BAM files of two biological replicates using samtools (v.1.13)
+samtools merge -o clean_bams/D_sorted.fbw.bam clean_bams/D1_sorted.fbw.bam clean_bams/D2_sorted.fbw.bam
+samtools index clean_bams/D_sorted.fbw.bam
+
+# identify footprints with with TOBIAS (v.0.16.1)
+TOBIAS ATACorrect --read_shift 0 0 --bam clean_bams/D_sorted.fbw.bam --genome Cni.v2.assembly.chr.fasta --peaks tobias/all.peaks.nodistal.bed --outdir tobias --prefix D --cores 30 1>logs/D_tobias_ATACorrect.log 2>&1
+TOBIAS ScoreBigwig --signal tobias/D_corrected.bw --regions tobias/all.peaks.nodistal.bed --output tobias/D_footprints.bw --cores 30 1>logs/D_tobias_FootprintScores.log 2>&1
+TOBIAS BINDetect --motifs ../motif_databases/JASPAR2024_CORE_metazoa_non-redundant_pfms_meme --signals tobias/G_footprints.bw tobias/T_footprints.bw  tobias/D_footprints.bw  tobias/LD_footprints.bw tobias/J_footprints.bw  tobias/M_footprints.bw --cond-names G T D LD J M --genome Cni.v2.assembly.chr.fasta --peaks tobias/all.peaks.nodistal.bed --outdir tobias --cores 30 1>logs/BINDetect.log 2>&1
