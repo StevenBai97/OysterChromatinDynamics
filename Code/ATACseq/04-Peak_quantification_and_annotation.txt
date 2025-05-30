@@ -10,3 +10,6 @@ perl abundance_estimates_to_matrix.pl --est_method featureCounts --quant_files c
 # Differential expression analysis
 ## run_DE_analysis.pl from Trinity-v2.15.1
 run_DE_analysis.pl -m ../counts/atac.counts.matrix --method edgeR -s sample.info --contrasts contrasts.txt -o edgeR 1>logs/run_edgeR.log 2>&1
+
+# Peak annotation with UROPA
+uropa -i all.peaks.json
