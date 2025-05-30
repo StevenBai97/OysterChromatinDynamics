@@ -1,7 +1,7 @@
 # calculate gene age for six molluscs using the GenERA tool (v.1.4.2)
 genEra -q Cni.v2.longest.pep.fasta -t 121615 -b nr.fa.gz -d new_taxdump_2024-01-01 -o Cni_basic -n 12
-genEra -q Cgi.fasta -t 29159 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2025-03-20.csv -o Cgi_basic -n 12
-genEra -q Pfu.fasta -t 50426 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2025-03-20.csv -o Pfu_basic -n 12
-genEra -q Pye.fasta -t 6573 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2025-03-20.csv -o Pye_basic -n 12
-genEra -q Hru.fasta -t 6454 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2025-03-20.csv -o Hru_basic -n 12
-genEra -q Pca.fasta -t 400727 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2025-03-20.csv -o Pca_basic -n 12
+genEra -q Cgi.fasta -t 29159 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2024-03-20.csv -o Cgi_basic -n 12
+genEra -q Pfu.fasta -t 50426 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2024-03-20.csv -o Pfu_basic -n 12
+genEra -q Pye.fasta -t 6573 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2024-03-20.csv -o Pye_basic -n 12
+genEra -q Hru.fasta -t 6454 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2024-03-20.csv -o Hru_basic -n 12
+genEra -q Pca.fasta -t 400727 -b nr.fa.gz -r Cni_basic/ncbi_lineages_2024-03-20.csv -o Pca_basic -n 12
