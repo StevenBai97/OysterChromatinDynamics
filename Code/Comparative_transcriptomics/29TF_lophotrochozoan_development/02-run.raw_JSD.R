@@ -4,7 +4,6 @@ library(ComplexHeatmap)
 library(grid)
 
 # 1. Cni vs. Cgi
-
 Cni2Cgi_orth_tpm_qn <- read.csv("Cni2Cgi_TPM_mean_quantile_transform.csv", header = T)
 Cgi2Cni_orth_tpm_qn <- read.csv("Cgi2Cni_TPM_mean_quantile_transform.csv", header = T)
 
@@ -47,7 +46,6 @@ write.table(Cni2Cgi_sd_JSD, "Cni2Cgi_subset_JSD_sd.txt", sep ='\t')
 
 
 # 2. Cni vs. Pfu
-
 Cni2Pfu_orth_tpm_qn <- read.csv("Cni2Pfu_TPM_mean_quantile_transform.csv", header = T)
 Pfu2Cni_orth_tpm_qn <- read.csv("Pfu2Cni_TPM_mean_quantile_transform.csv", header = T)
 
@@ -88,7 +86,6 @@ write.table(Cni2Pfu_mean_JSD, "Cni2Pfu_subset_JSD_mean.txt", sep ='\t')
 write.table(Cni2Pfu_sd_JSD, "Cni2Pfu_subset_JSD_sd.txt", sep ='\t')
 
 # 3. Cni vs. Pye
-
 Cni2Pye_orth_tpm_qn <- read.csv("Cni2Pye_TPM_mean_quantile_transform.csv", header = T)
 Pye2Cni_orth_tpm_qn <- read.csv("Pye2Cni_TPM_mean_quantile_transform.csv", header = T)
 
@@ -130,7 +127,6 @@ write.table(Cni2Pye_sd_JSD, "Cni2Pye_subset_JSD_sd.txt", sep ='\t')
 
 
 # 4. Cni vs. Hru
-
 Cni2Hru_orth_tpm_qn <- read.csv("Cni2Hru_TPM_mean_quantile_transform.csv", header = T)
 Hru2Cni_orth_tpm_qn <- read.csv("Hru2Cni_TPM_mean_quantile_transform.csv", header = T)
 
@@ -172,7 +168,6 @@ write.table(Cni2Hru_sd_JSD, "Cni2Hru_subset_JSD_sd.txt", sep ='\t')
 
 
 # 5. Cni vs. Pca
-
 Cni2Pca_orth_tpm_qn <- read.csv("Cni2Pca_TPM_mean_quantile_transform.csv", header = T)
 Pca2Cni_orth_tpm_qn <- read.csv("Pca2Cni_TPM_mean_quantile_transform.csv", header = T)
 
@@ -213,7 +208,6 @@ write.table(Cni2Pca_mean_JSD, "Cni2Pca_subset_JSD_mean.txt", sep ='\t')
 write.table(Cni2Pca_sd_JSD, "Cni2Pca_subset_JSD_sd.txt", sep ='\t')
 
 # 6. Cni vs. Lan
-
 Cni2Lan_orth_tpm_qn <- read.csv("Cni2Lan_TPM_mean_quantile_transform.csv", header = T)
 Lan2Cni_orth_tpm_qn <- read.csv("Lan2Cni_TPM_mean_quantile_transform.csv", header = T)
 
@@ -254,7 +248,6 @@ write.table(Cni2Lan_mean_JSD, "Cni2Lan_subset_JSD_mean.txt", sep ='\t')
 write.table(Cni2Lan_sd_JSD, "Cni2Lan_subset_JSD_sd.txt", sep ='\t')
 
 # 7. Cni vs. Ofu
-
 Cni2Ofu_orth_tpm_qn <- read.csv("Cni2Ofu_TPM_mean_quantile_transform.csv", header = T)
 Ofu2Cni_orth_tpm_qn <- read.csv("Ofu2Cni_TPM_mean_quantile_transform.csv", header = T)
 
@@ -295,7 +288,6 @@ write.table(Cni2Ofu_mean_JSD, "Cni2Ofu_subset_JSD_mean.txt", sep ='\t')
 write.table(Cni2Ofu_sd_JSD, "Cni2Ofu_subset_JSD_sd.txt", sep ='\t')
 
 # 8. Cni vs. Aam
-
 Cni2Aam_orth_tpm_qn <- read.csv("Cni2Aam_TPM_mean_quantile_transform.csv", header = T)
 Aam2Cni_orth_tpm_qn <- read.csv("Aam2Cni_TPM_mean_quantile_transform.csv", header = T)
 
