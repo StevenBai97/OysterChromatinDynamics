@@ -4,7 +4,6 @@ library(RColorBrewer)
 library(pheatmap)
 library(corrplot)
 library(tidyr)
-library(preprocessCore)
 library(plyr)
 
 Cni_orthologues <- c(29,29,29,29,29,29,29,27,23)
