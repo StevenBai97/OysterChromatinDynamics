@@ -1,14 +1,6 @@
-library(dplyr)
-library(ggplot2)
-library(RColorBrewer)
-library(pheatmap)
-library(corrplot)
 library(philentropy)
-library(tidyr)
-library(preprocessCore)
-library(plyr)
+library(RColorBrewer)
 library(ComplexHeatmap)
-library(gridExtra)
 library(grid)
 
 # 1. Cni vs. Cgi
