@@ -1,4 +1,4 @@
 gff3ToGenePred Cni.v2.longest.gene.gff3 Cni_v2.gp
 java -mx300G -jar ChromHMM.jar ConvertGeneTable -nobin -noheader -l ChromHMM/CHROMSIZES/Cniv2.txt ChromHMM/Cni_v2.gp Cniv2 Cniv2
 java -mx300G -jar ChromHMM.jar BinarizeBam -paired ChromHMM/CHROMSIZES/Cniv2.txt bamfile cell_mark_filetable.txt binary_bam_out
-java -mx300G -jar ChromHMM.jar LearnModel -p 40 binary_bam_out learnmodel_out 12 Cniv2
+java -mx300G -jar ChromHMM.jar LearnModel -p 40 binary_bam_out learnmodel_out 8 Cniv2
