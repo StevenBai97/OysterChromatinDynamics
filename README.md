@@ -55,11 +55,3 @@ If you use the code from this repository, please cite:
 Bai Y, Min Y, Liu S, et al. (2026). **Evolutionary innovation within conserved gene regulatory networks underlying biomineralized skeletons in Bilateria.** *Molecular Biology and Evolution*, 43(2), msag019.
 
 DOI: https://doi.org/10.1093/molbev/msag019
-
-## Contact
-
-**Yitian Bai**
-
-Ocean University of China
-
-GitHub: https://github.com/StevenBai97
