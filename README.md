@@ -16,17 +16,19 @@ Our findings reveal a biphasic regulatory program in which stage-specific chroma
 
 The study includes the following computational analyses:
 
-1. **Transcriptomic analysis:** Gene expression profiling across developmental stages and adult mantle tissue, including the identification of stage-specific biomineralization genes.
+1. **Genome assembly and annotation improvement:** Refinement of the Crassostrea nippona reference genome assembly and improvement of structural and functional gene annotations to support downstream multi-omics analyses.
 
-2. **Chromatin accessibility analysis:** ATAC-seq analysis to characterize accessible chromatin regions and their dynamic changes during shell development.
+2. **Transcriptomic analysis:** Gene expression profiling across developmental stages and adult mantle tissue, including the identification of stage-specific biomineralization genes.
 
-3. **Histone modification analysis:** CUT&Tag analysis of H3K4me3, H3K27ac, and H3K27me3 to investigate stage-specific epigenetic regulation.
+3. **Chromatin accessibility analysis:** ATAC-seq analysis to characterize accessible chromatin regions and their dynamic changes during shell development.
 
-4. **Chromatin state dynamics:** Integration of chromatin accessibility and histone modification profiles to characterize regulatory states and their transitions between larval and adult stages.
+4. **Histone modification analysis:** CUT&Tag analysis of H3K4me3, H3K27ac, and H3K27me3 to investigate stage-specific epigenetic regulation.
 
-5. **Gene regulatory network analysis:** Reconstruction and comparison of regulatory networks associated with larval and adult shell formation.
+5. **Chromatin state dynamics:** Integration of chromatin accessibility and histone modification profiles to characterize regulatory states and their transitions between larval and adult stages.
 
-6. **Comparative evolutionary analysis:** Cross-species comparisons of transcription factors and their expression dynamics to investigate the evolutionary conservation and divergence of biomineralization regulatory programs.
+6. **Gene regulatory network analysis:** Reconstruction and comparison of regulatory networks associated with larval and adult shell formation.
+
+7. **Comparative evolutionary analysis:** Cross-species comparisons of transcription factors and their expression dynamics to investigate the evolutionary conservation and divergence of biomineralization regulatory programs.
 
 ## Code and Reproducibility
 
